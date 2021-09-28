@@ -82,6 +82,7 @@ def get_all_users():
         abort(404, 'No Gpus found')
     try:
         response = jsonify({'users' : [user.format() for user in users]})
+        response.headers.add("Access-Control-Allow-Origin", "*")
         return response, 200
     except:
         abort(400)
