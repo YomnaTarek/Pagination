@@ -10,10 +10,17 @@ export default function InfiniteScrolling(props) {
 
     const [hasMore, setHasMore] = useState(true);
 
+    const [perPage, setPerPage] = useState(20); // Use this to set the number of items requested per page(request)
+
     axios.defaults.baseURL = 'http://127.0.0.1:5000';
 
     useEffect(() => {
-        axios.get(`/users?page=${page}&per_page=32`)
+        axios.get(`/users`, {
+            params: {
+              page: page,
+              per_page: perPage
+            }
+          })
             .then(res => {
                 let newUsers = res.data.users;
                 setUsers([...users, ...newUsers]);
