@@ -84,7 +84,9 @@ def get_all_users():
     pages_count = math.ceil(num_of_users / per_page)
     
     if len(users) == 0:
-        abort(404, 'No Users found')
+        response = jsonify({'users' : [],
+        'pages_count': pages_count})
+        return response, 200
     try:
         response = jsonify({'users' : [user.format() for user in users],
         'pages_count': pages_count})
