@@ -6,7 +6,7 @@ import {
   Link
 } from "react-router-dom";
 import Pagination from './components/Pagination';
-import UsersInfiniteScroll from './components/UsersInfiniteScroll';
+import InfiniteScrolling from './components/InfiniteScrolling';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
               <Pagination />
             </Route>
             <Route exact path="/infinite">
-              <UsersInfiniteScroll />
+              <InfiniteScrolling />
             </Route>
           </Switch>
         </div>
