@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
+import UsersCards from './UsersCards'
 
-const Pagination = () => {
+export default function Pagination(props) {
+  
   const [users, setUsers] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   let perPage = 20;
   axios.defaults.baseURL = 'http://127.0.0.1:5000';
+
   useEffect(() => {
     const getUsers = () => {
       axios.get(`/users?page=1&per_page=${perPage}`)
@@ -39,24 +42,8 @@ const Pagination = () => {
   };
 
   return (
-    <div className="container">
-      <div className="row m-2">
-        {users.map((item) => {
-          return (
-            <div key={item.id} className="col-sm-6 col-md-4 v my-2">
-              <div className="card shadow-sm w-100 border-danger mb-3" style={{ minHeight: 225 }}>
-                <div className="card-body">
-                  <h5 className="card-title text-center h2">Id :{item.id} </h5>
-                  <h5 className="card-title text-center h2">
-                    Name: {item.name}
-                  </h5>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
+    <div>
+      <UsersCards users={users} />
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}
@@ -79,4 +66,3 @@ const Pagination = () => {
     </div>
   );
 }
-export default Pagination;
