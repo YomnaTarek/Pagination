@@ -4,6 +4,7 @@ from flask import jsonify, abort
 import string
 import random
 from flask import request
+import math 
 
 db = SQLAlchemy()
 
@@ -14,7 +15,7 @@ ahmed_password = "1234567890"
 
 database_uri = "postgresql://{}:{}@{}/{}".format(
     postgres_user,
-    ahmed_password,
+    password,
     'localhost:5432',
     database_name
     )
@@ -69,6 +70,8 @@ def about():
 
 @app.route("/users", methods=['GET'])
 def get_all_users():
+    all_users = Users.query.all()
+    num_of_users = len(all_users)
     page = int(request.args.get('page'))
 
     if (request.args.get('per_page')):
@@ -78,10 +81,13 @@ def get_all_users():
 
     users = Users.query.order_by(Users.id.asc()).paginate(page,per_page,error_out=False).items
 
+    pages_count = math.ceil(num_of_users / per_page)
+    
     if len(users) == 0:
-        abort(404, 'No Gpus found')
+        abort(404, 'No Users found')
     try:
-        response = jsonify({'users' : [user.format() for user in users]})
+        response = jsonify({'users' : [user.format() for user in users],
+        'pages_count': pages_count})
         return response, 200
     except:
         abort(400)
@@ -90,3 +96,10 @@ def create_dummy_users():
     for x in range(500):
         new_user = Users(random.choice(string.ascii_letters))
         new_user.insert()
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, DELETE, PATCH')
+    return response
